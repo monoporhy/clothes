@@ -4,6 +4,9 @@
 
 **公開URL**: https://monoporhy.github.io/clothes/
 
+- [服カタログ](https://monoporhy.github.io/clothes/) — 全アイテム一覧
+- [コーデの提案](https://monoporhy.github.io/clothes/coordinate.html) — ランダムコーデ提案
+
 **主な用途**: 買い物時に「似たものを持っていないか・サイズは合うか」を確認する。
 
 ---
@@ -12,20 +15,23 @@
 
 ```
 clothes/
-├── index.html     # 公開ページ
-└── clothes.json   # 服データ（source of truth）
+├── index.html         # 服カタログ（全アイテム一覧・フィルター・ソート）
+├── coordinate.html    # コーデ提案（トップス・ボトムス・アウターをランダムピック）
+└── clothes.json       # 服データ（source of truth）
 ```
 
 ## ページ仕様
 
-- `clothes.json` をランタイムに fetch してテーブルを描画（ビルドステップなし）
+- `clothes.json` をランタイムに fetch して描画（ビルドステップなし）
 - GitHub Pages で自動公開（main push → 即反映）
 
-### フィルター
+### index.html — 服カタログ
+
+##### フィルター
 
 - **カテゴリ**: すべて / トップス / ボトムス の3ボタン
 
-### テーブル
+#### テーブル
 
 | 列 | 内容 |
 |---|---|
@@ -39,6 +45,13 @@ clothes/
 
 - 各列ヘッダーをクリックで昇順/降順ソート
 - レスポンシブ対応（スマホでは寸法列を非表示・横スクロール）
+
+### coordinate.html — コーデ提案
+
+- トップス・ボトムス・アウターをランダムで1点ずつピックして3点コーデを提案
+- 「別のコーデを提案 🔀」ボタンで再生成
+- 画像なし時はグレーのプレースホルダー表示
+- レスポンシブ対応（600px以下でカードが縦並び）
 
 ---
 
