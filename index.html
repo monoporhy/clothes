@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>服カタログ</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #fff; color: #111; padding: 24px; max-width: 1200px; margin: 0 auto; }
+    h1 { font-size: 1.4rem; margin-bottom: 20px; font-weight: 600; }
+
+    /* Filter buttons */
+    .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .filters button {
+      padding: 6px 14px; border: 1px solid #ccc; background: #fff;
+      border-radius: 4px; cursor: pointer; font-size: 0.875rem; font-family: inherit;
+      transition: background 0.1s, color 0.1s;
+    }
+    .filters button.active { background: #111; color: #fff; border-color: #111; }
+    .filters button:hover:not(.active) { background: #f5f5f5; }
+
+    /* Table */
+    .table-section { margin-bottom: 48px; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    th { text-align: left; padding: 8px 12px; border-bottom: 2px solid #111; white-space: nowrap; font-weight: 600; }
+    td { padding: 8px 12px; border-bottom: 1px solid #eee; white-space: nowrap; }
+    tbody tr { cursor: pointer; }
+    tbody tr:hover td { background: #f9f9f9; }
+    tbody tr.hidden { display: none; }
+    td a { color: #111; text-decoration: underline; font-size: 0.8rem; }
+
+    /* Gallery */
+    .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
+    .card { border: 1px solid #eee; border-radius: 6px; overflow: hidden; transition: box-shadow 0.15s; }
+    .card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .card.hidden { display: none; }
+    .card.highlight { outline: 2px solid #111; outline-offset: -2px; }
+    .card-img { width: 100%; height: 200px; object-fit: cover; display: block; cursor: pointer; }
+    .card-placeholder {
+      width: 100%; height: 200px; background: #f0f0f0;
+      display: flex; align-items: center; justify-content: center;
+      color: #aaa; font-size: 0.8rem;
+    }
+    .card-placeholder.clickable { cursor: pointer; }
+    .card-info { padding: 10px 12px; }
+    .card-brand { font-size: 0.75rem; color: #888; margin-bottom: 2px; }
+    .card-name { font-size: 0.875rem; font-weight: 500; margin-bottom: 2px; }
+    .card-color { font-size: 0.75rem; color: #888; }
+  </style>
+</head>
+<body>
+  <h1>服カタログ</h1>
+
+  <div class="filters" id="filters"></div>
+
+  <div class="table-section">
+    <table>
+      <thead>
+        <tr>
+          <th>カテゴリ</th>
+          <th>ブランド</th>
+          <th>名称</th>
+          <th>カラー</th>
+          <th>サイズ</th>
+          <th>代表寸法</th>
+          <th>URL</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="gallery" id="gallery"></div>
+
+  <script>
+    const SUMMARY_KEYS = {
+      'トップス': ['着丈', '肩幅', '身幅'],
+      'アウター': ['着丈', '肩幅', '身幅'],
+      'ボトムス': ['ウエスト', '股上', '渡り'],
+    };
+    const NO_DIM_CATS = ['シューズ', 'バッグ', 'アクセサリー'];
+
+    function summaryDim(item) {
+      if (NO_DIM_CATS.includes(item.category)) return '-';
+      const d = item.dimensions || {};
+      if (item.category === 'その他') {
+        const parts = Object.entries(d).map(([k, v]) => `${k}: ${v}`);
+        return parts.length ? parts.join('、') : '-';
+      }
+      const keys = SUMMARY_KEYS[item.category] || [];
+      const parts = keys.filter(k => d[k] != null).map(k => `${k}: ${d[k]}`);
+      return parts.length ? parts.join('、') : '-';
+    }
+
+    function makeImageEl(item) {
+      if (!item.image) {
+        const div = document.createElement('div');
+        div.className = 'card-placeholder';
+        div.textContent = '画像なし';
+        return div;
+      }
+      const img = document.createElement('img');
+      img.className = 'card-img';
+      img.src = item.image;
+      img.alt = item.name;
+      img.loading = 'lazy';
+      img.onerror = () => {
+        const div = document.createElement('div');
+        div.className = 'card-placeholder' + (item.url ? ' clickable' : '');
+        div.textContent = '画像なし';
+        if (item.url) div.addEventListener('click', () => window.open(item.url, '_blank', 'noopener'));
+        img.replaceWith(div);
+      };
+      return img;
+    }
+
+    function escHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    let currentFilter = 'すべて';
+
+    function applyFilter(cat) {
+      currentFilter = cat;
+      document.querySelectorAll('#filters button').forEach(b => {
+        b.classList.toggle('active', b.textContent === cat);
+      });
+      document.querySelectorAll('#tbody tr[data-id]').forEach(tr => {
+        tr.classList.toggle('hidden', cat !== 'すべて' && tr.dataset.cat !== cat);
+      });
+      document.querySelectorAll('#gallery .card[data-id]').forEach(card => {
+        const tr = document.querySelector(`#tbody tr[data-id="${card.dataset.id}"]`);
+        card.classList.toggle('hidden', !!(tr && tr.classList.contains('hidden')));
+      });
+    }
+
+    function scrollToCard(id) {
+      const card = document.querySelector(`#gallery .card[data-id="${id}"]`);
+      if (!card) return;
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      card.classList.add('highlight');
+      setTimeout(() => card.classList.remove('highlight'), 1500);
+    }
+
+    function render(items) {
+      // Filter buttons
+      const categories = ['すべて', ...new Set(items.map(i => i.category))];
+      const filtersEl = document.getElementById('filters');
+      filtersEl.innerHTML = '';
+      categories.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.textContent = cat;
+        if (cat === currentFilter) btn.classList.add('active');
+        btn.addEventListener('click', () => applyFilter(cat));
+        filtersEl.appendChild(btn);
+      });
+
+      // Table rows
+      const tbody = document.getElementById('tbody');
+      tbody.innerHTML = '';
+      items.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.dataset.id = item.id;
+        tr.dataset.cat = item.category;
+        const urlCell = item.url
+          ? `<a href="${escHtml(item.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">開く</a>`
+          : '';
+        tr.innerHTML = `
+          <td>${escHtml(item.category)}</td>
+          <td>${escHtml(item.brand)}</td>
+          <td>${escHtml(item.name)}</td>
+          <td>${escHtml(item.color)}</td>
+          <td>${escHtml(item.size)}</td>
+          <td>${escHtml(summaryDim(item))}</td>
+          <td>${urlCell}</td>
+        `;
+        tr.addEventListener('click', () => scrollToCard(item.id));
+        tbody.appendChild(tr);
+      });
+
+      // Gallery cards
+      const gallery = document.getElementById('gallery');
+      gallery.innerHTML = '';
+      items.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.dataset.id = item.id;
+
+        const imgEl = makeImageEl(item);
+        if (item.url && imgEl.tagName === 'IMG') {
+          imgEl.addEventListener('click', () => window.open(item.url, '_blank', 'noopener'));
+        }
+
+        const info = document.createElement('div');
+        info.className = 'card-info';
+        info.innerHTML = `
+          <div class="card-brand">${escHtml(item.brand)}</div>
+          <div class="card-name">${escHtml(item.name)}</div>
+          <div class="card-color">${escHtml(item.color)}</div>
+        `;
+
+        card.appendChild(imgEl);
+        card.appendChild(info);
+        gallery.appendChild(card);
+      });
+
+      applyFilter(currentFilter);
+    }
+
+    fetch('clothes.json')
+      .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(items => render(items))
+      .catch(err => {
+        document.body.insertAdjacentHTML('beforeend',
+          `<p style="color:red;margin-top:16px">clothes.json の読み込みに失敗しました (${err.message})</p>`);
+      });
+  </script>
+</body>
+</html>
