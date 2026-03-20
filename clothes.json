@@ -23,7 +23,12 @@
     "name": "MERINO WOOL BOX TEE",
     "color": "",
     "size": "",
-    "dimensions": {},
+    "dimensions": {
+      "着丈": 62,
+      "肩幅": 43.5,
+      "身幅": 52,
+      "袖丈": 25
+    },
     "url": "https://lidnm-store.com/products/detail.php?product_id=495",
     "image": "",
     "purchased_at": "2026-03"
@@ -35,7 +40,10 @@
     "name": "Felted Wool Utility Overall",
     "color": "Coal Black",
     "size": "",
-    "dimensions": {},
+    "dimensions": {
+      "肩幅": 48,
+      "袖丈": 57
+    },
     "url": "https://lidnm-store.com/products/detail.php?product_id=546",
     "image": "",
     "purchased_at": "2026-03"
@@ -47,7 +55,12 @@
     "name": "ALPACA KNIT SHIRT CARDIGAN",
     "color": "HEATHER BLACK",
     "size": "",
-    "dimensions": {},
+    "dimensions": {
+      "着丈": 61,
+      "肩幅": 43.5,
+      "身幅": 54,
+      "袖丈": 57
+    },
     "url": "https://lidnm-store.com/products/detail.php?product_id=475",
     "image": "",
     "purchased_at": "2026-03"
@@ -59,7 +72,12 @@
     "name": "Cashmere Fur Cardigan",
     "color": "Fogstone",
     "size": "",
-    "dimensions": {},
+    "dimensions": {
+      "着丈": 61,
+      "肩幅": 45.5,
+      "身幅": 56,
+      "袖丈": 55.5
+    },
     "url": "https://lidnm-store.com/products/detail.php?product_id=537",
     "image": "",
     "purchased_at": "2026-03"
@@ -71,7 +89,12 @@
     "name": "DOUBLE BREASTED CHESTER",
     "color": "DARK GRAY",
     "size": "",
-    "dimensions": {},
+    "dimensions": {
+      "着丈": 121,
+      "肩幅": 45,
+      "身幅": 56,
+      "袖丈": 59.5
+    },
     "url": "https://lidnm-store.com/products/detail.php?product_id=472",
     "image": "",
     "purchased_at": "2026-03"
@@ -83,7 +106,11 @@
     "name": "STRECCAN REVER COAT",
     "color": "HEATHER BLACK",
     "size": "",
-    "dimensions": {},
+    "dimensions": {
+      "着丈": 123,
+      "身幅": 68.5,
+      "袖丈": 85.5
+    },
     "url": "https://lidnm-store.com/products/detail.php?product_id=451",
     "image": "",
     "purchased_at": "2026-03"
@@ -95,7 +122,12 @@
     "name": "Beaver Double-faced Trench",
     "color": "MIDNIGHT",
     "size": "",
-    "dimensions": {},
+    "dimensions": {
+      "着丈": 123,
+      "肩幅": 43,
+      "身幅": 63,
+      "袖丈": 74.5
+    },
     "url": "https://lidnm-store.com/products/detail.php?product_id=532",
     "image": "",
     "purchased_at": "2026-03"
@@ -107,7 +139,12 @@
     "name": "Llife DOESKIN TAILORED JACKET",
     "color": "",
     "size": "",
-    "dimensions": {},
+    "dimensions": {
+      "着丈": 73,
+      "肩幅": 43.5,
+      "身幅": 54.5,
+      "袖丈": 60
+    },
     "url": "https://lidnm-store.com/products/detail.php?product_id=355",
     "image": "",
     "purchased_at": "2026-03"
@@ -119,7 +156,11 @@
     "name": "LINEN SLUB TANK TOP",
     "color": "",
     "size": "",
-    "dimensions": {},
+    "dimensions": {
+      "着丈": 70.5,
+      "肩幅": 32,
+      "身幅": 46
+    },
     "url": "https://zozo.jp/shop/lidnm/goods/80763959/",
     "image": "",
     "purchased_at": "2026-03"
@@ -131,7 +172,12 @@
     "name": "Fox Cashmere V Knit",
     "color": "",
     "size": "",
-    "dimensions": {},
+    "dimensions": {
+      "着丈": 63,
+      "肩幅": 49,
+      "身幅": 60,
+      "袖丈": 54.5
+    },
     "url": "https://lidnm-store.com/products/detail.php?product_id=477",
     "image": "",
     "purchased_at": "2026-03"
@@ -143,7 +189,11 @@
     "name": "WOOL CASHMERE ZIP HOODIE",
     "color": "",
     "size": "",
-    "dimensions": {},
+    "dimensions": {
+      "着丈": 61,
+      "身幅": 59,
+      "袖丈": 86
+    },
     "url": "https://lidnm-store.com/products/detail.php?product_id=543",
     "image": "",
     "purchased_at": "2026-03"
@@ -215,7 +265,12 @@
     "name": "MILLED NZ MERINO WOOL L/S",
     "color": "",
     "size": "",
-    "dimensions": {},
+    "dimensions": {
+      "着丈": 67,
+      "肩幅": 49.5,
+      "身幅": 59,
+      "袖丈": 57
+    },
     "url": "https://lidnm-store.com/products/detail.php?product_id=542",
     "image": "",
     "purchased_at": "2026-03"
@@ -227,7 +282,12 @@
     "name": "MILLED NZ MERINO WOOL L/S",
     "color": "",
     "size": "",
-    "dimensions": {},
+    "dimensions": {
+      "着丈": 67,
+      "肩幅": 49.5,
+      "身幅": 59,
+      "袖丈": 57
+    },
     "url": "https://lidnm-store.com/products/detail.php?product_id=446",
     "image": "",
     "purchased_at": "2026-03"
@@ -239,7 +299,12 @@
     "name": "Vis/Li Random Rib Henry Knit",
     "color": "Sable",
     "size": "",
-    "dimensions": {},
+    "dimensions": {
+      "着丈": 60,
+      "肩幅": 40,
+      "身幅": 48,
+      "袖丈": 55
+    },
     "url": "https://zozo.jp/?c=gr&did=156675494",
     "image": "",
     "purchased_at": "2026-03"
@@ -251,7 +316,12 @@
     "name": "Goat Suede Sports JKT",
     "color": "MIDNIGHT",
     "size": "",
-    "dimensions": {},
+    "dimensions": {
+      "着丈": 61,
+      "肩幅": 51,
+      "身幅": 58,
+      "袖丈": 57.5
+    },
     "url": "https://lidnm-store.com/products/detail553.html",
     "image": "",
     "purchased_at": "2026-03"
@@ -263,7 +333,12 @@
     "name": "Goat Suede Sports JKT",
     "color": "MIDNIGHT",
     "size": "",
-    "dimensions": {},
+    "dimensions": {
+      "着丈": 61,
+      "肩幅": 51,
+      "身幅": 58,
+      "袖丈": 57.5
+    },
     "url": "https://lidnm-store.com/products/detail558.html",
     "image": "",
     "purchased_at": "2026-03"
