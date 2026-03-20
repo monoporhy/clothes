@@ -5,75 +5,204 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>コーデの提案</title>
   <style>
+    :root {
+      --bg:       #0b0c0e;
+      --surface:  #111318;
+      --border:   #252830;
+      --border2:  #1e2028;
+      --text:     #c4c8d4;
+      --muted:    #5a6070;
+      --accent:   #4d7fa8;
+      --dim:      #8a90a0;
+      --hover-bg: #161820;
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, -apple-system, sans-serif; background: #fff; color: #111; padding: 16px; max-width: 900px; margin: 0 auto; }
 
-    header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
-    h1 { font-size: 1.4rem; font-weight: 600; }
-    header a { font-size: 0.875rem; color: #111; text-decoration: underline; }
+    body {
+      font-family: 'Helvetica Neue', Helvetica, 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
 
-    .cards { display: flex; gap: 16px; margin-bottom: 24px; }
+    /* ── Header ───────────────────────────── */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex;
+      align-items: stretch;
+    }
+    .header-brand {
+      padding: 14px 20px 14px 0;
+      border-right: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-brand .sigil {
+      width: 22px; height: 22px;
+      display: grid;
+      grid-template: 1fr 1fr / 1fr 1fr;
+      gap: 3px;
+    }
+    .header-brand .sigil span { background: var(--accent); display: block; }
+    .header-brand .sigil span:nth-child(3) { background: var(--muted); }
+    h1 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .header-nav {
+      padding: 14px 0 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+    }
+    .header-nav a {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      padding: 5px 12px;
+      border: 1px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .header-nav a:hover { color: var(--accent); border-color: var(--border); }
+
+    /* ── Cards ───────────────────────────── */
+    .cards {
+      display: flex;
+      gap: 1px;
+      background: var(--border);
+      border-bottom: 1px solid var(--border);
+    }
     .card {
-      flex: 1; border: 1px solid #eee; border-radius: 8px; overflow: hidden;
-      display: flex; flex-direction: column;
+      flex: 1;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
     }
     .card-img {
-      width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block;
-      background: #f0f0f0; max-height: 320px;
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      display: block;
+      background: var(--surface);
     }
     .card-img-placeholder {
-      width: 100%; aspect-ratio: 1 / 1; background: #f0f0f0;
-      display: flex; align-items: center; justify-content: center;
-      color: #bbb; font-size: 0.8rem; max-height: 320px;
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
     }
-    .card-body { padding: 12px; flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .card-body {
+      padding: 14px 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      border-top: 1px solid var(--border);
+    }
     .badge {
-      display: inline-block; font-size: 0.7rem; padding: 2px 8px;
-      border: 1px solid #ccc; border-radius: 10px; color: #555; width: fit-content;
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
     }
-    .card-brand { font-size: 0.8rem; color: #555; margin-top: 4px; }
-    .card-name { font-size: 0.95rem; font-weight: 600; line-height: 1.3; }
-    .card-color { font-size: 0.8rem; color: #777; }
+    .card-brand {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+    .card-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.4;
+      text-decoration: none;
+    }
+    a.card-name:hover { color: var(--accent); }
+    .card-color {
+      font-size: 0.75rem;
+      color: var(--dim);
+    }
 
     .empty {
-      flex: 1; border: 1px dashed #ccc; border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      color: #bbb; font-size: 0.85rem; min-height: 200px;
+      flex: 1;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      min-height: 240px;
     }
 
-    .actions { display: flex; justify-content: center; }
+    /* ── Action bar ──────────────────────── */
+    .actions {
+      padding: 20px 24px;
+      display: flex;
+      justify-content: center;
+    }
     .btn-shuffle {
-      padding: 10px 24px; background: #111; color: #fff; border: none;
-      border-radius: 6px; font-size: 1rem; font-family: inherit;
-      cursor: pointer; transition: background 0.15s;
+      padding: 10px 32px;
+      background: none;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      font-size: 0.8rem;
+      font-family: inherit;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
     }
-    .btn-shuffle:hover { background: #333; }
+    .btn-shuffle:hover { background: var(--accent); color: var(--bg); }
 
-    #error { color: red; margin-top: 16px; font-size: 0.875rem; }
+    #error { color: #c44; padding: 20px 24px; font-size: 0.8rem; }
 
     @media (max-width: 600px) {
-      .cards { flex-direction: column; }
-      .card-img, .card-img-placeholder { aspect-ratio: 4 / 3; max-height: none; }
+      .cards { flex-direction: column; gap: 1px; }
+      .card-img, .card-img-placeholder { aspect-ratio: 4 / 3; }
       .btn-shuffle { width: 100%; max-width: 320px; }
     }
   </style>
 </head>
 <body>
+
   <header>
-    <h1>コーデの提案</h1>
-    <a href="index.html">カタログへ</a>
+    <div class="header-brand">
+      <div class="sigil">
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <h1>Coordinate</h1>
+    </div>
+    <nav class="header-nav">
+      <a href="index.html">← カタログ</a>
+    </nav>
   </header>
 
   <div class="cards" id="cards"></div>
+
   <div class="actions">
-    <button class="btn-shuffle" id="btn-shuffle">別のコーデを提案 🔀</button>
+    <button class="btn-shuffle" id="btn-shuffle">Shuffle</button>
   </div>
   <p id="error"></p>
 
   <script>
     let allItems = [];
 
-    function escHtml(str) {
+    function esc(str) {
       return String(str || '')
         .replace(/&/g, '&amp;').replace(/</g, '&lt;')
         .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -97,23 +226,23 @@
 
     function renderCard(item, label) {
       if (!item) {
-        return `<div class="empty">${escHtml(label)}なし</div>`;
+        return `<div class="empty">${esc(label)} — NO DATA</div>`;
       }
       const imgHtml = item.image
-        ? `<img class="card-img" src="${escHtml(item.image)}" alt="${escHtml(item.name)}" loading="lazy">`
-        : `<div class="card-img-placeholder">画像なし</div>`;
+        ? `<img class="card-img" src="${esc(item.image)}" alt="${esc(item.name)}" loading="lazy">`
+        : `<div class="card-img-placeholder">NO IMAGE</div>`;
       const colorHtml = item.color
-        ? `<div class="card-color">${escHtml(item.color)}</div>`
+        ? `<div class="card-color">${esc(item.color)}</div>`
         : '';
       const nameHtml = item.url
-        ? `<a href="${escHtml(item.url)}" target="_blank" rel="noopener" class="card-name" style="color:#111;text-decoration:none">${escHtml(item.name)}</a>`
-        : `<div class="card-name">${escHtml(item.name)}</div>`;
+        ? `<a href="${esc(item.url)}" target="_blank" rel="noopener" class="card-name">${esc(item.name)}</a>`
+        : `<div class="card-name">${esc(item.name)}</div>`;
       return `
         <div class="card">
           ${imgHtml}
           <div class="card-body">
-            <span class="badge">${escHtml(item.category)}</span>
-            <div class="card-brand">${escHtml(item.brand)}</div>
+            <div class="badge">${esc(item.category)}</div>
+            <div class="card-brand">${esc(item.brand)}</div>
             ${nameHtml}
             ${colorHtml}
           </div>
