@@ -5,67 +5,196 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>服カタログ</title>
   <style>
+    :root {
+      --bg:       #0b0c0e;
+      --surface:  #111318;
+      --border:   #252830;
+      --border2:  #1e2028;
+      --text:     #c4c8d4;
+      --muted:    #5a6070;
+      --accent:   #4d7fa8;
+      --dim:      #8a90a0;
+      --hover-bg: #161820;
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, -apple-system, sans-serif; background: #fff; color: #111; padding: 16px; max-width: 1100px; margin: 0 auto; }
-    h1 { font-size: 1.4rem; font-weight: 600; }
 
-    /* Filter buttons */
-    .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-    .filters button {
-      padding: 6px 14px; border: 1px solid #ccc; background: #fff;
-      border-radius: 4px; cursor: pointer; font-size: 0.875rem; font-family: inherit;
-      transition: background 0.1s, color 0.1s;
+    body {
+      font-family: 'Helvetica Neue', Helvetica, 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
     }
-    .filters button.active { background: #111; color: #fff; border-color: #111; }
-    .filters button:hover:not(.active) { background: #f5f5f5; }
 
-    /* Table */
-    .table-section { margin-bottom: 48px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    /* ── Header ───────────────────────────── */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+    }
+    .header-brand {
+      padding: 14px 20px 14px 0;
+      border-right: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-brand .sigil {
+      width: 22px; height: 22px;
+      display: grid;
+      grid-template: 1fr 1fr / 1fr 1fr;
+      gap: 3px;
+    }
+    .header-brand .sigil span {
+      background: var(--accent);
+      display: block;
+    }
+    .header-brand .sigil span:nth-child(3) { background: var(--muted); }
+    h1 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .header-nav {
+      padding: 14px 0 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+    }
+    .header-nav a {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      padding: 5px 12px;
+      border: 1px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .header-nav a:hover {
+      color: var(--accent);
+      border-color: var(--border);
+    }
+
+    /* ── Category tabs ───────────────────── */
+    .tab-bar {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .tab-bar button {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-family: inherit;
+      letter-spacing: 0.1em;
+      padding: 10px 16px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: color 0.15s, border-color 0.15s;
+      margin-bottom: -1px;
+    }
+    .tab-bar button:hover { color: var(--text); }
+    .tab-bar button.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    /* ── Table ───────────────────────────── */
+    .table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+    thead tr {
+      border-bottom: 1px solid var(--border);
+    }
     th {
-      text-align: left; padding: 8px 10px; border-bottom: 2px solid #111;
-      white-space: nowrap; font-weight: 600; cursor: pointer; user-select: none;
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
     }
-    th:hover { background: #f5f5f5; }
-    th .sort-icon { display: inline-block; margin-left: 4px; opacity: 0.3; font-size: 0.75rem; }
-    th.sort-asc .sort-icon, th.sort-desc .sort-icon { opacity: 1; }
-    td { padding: 8px 10px; border-bottom: 1px solid #eee; white-space: nowrap; }
-    td.dim { text-align: right; color: #555; }
-    td.no { color: #999; font-size: 0.8rem; text-align: right; width: 2rem; }
+    th:hover { color: var(--text); }
+    th .sort-icon { margin-left: 4px; opacity: 0.4; font-size: 0.65rem; }
+    th.sort-asc .sort-icon, th.sort-desc .sort-icon { opacity: 1; color: var(--accent); }
+    td {
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--border2);
+      white-space: nowrap;
+      color: var(--text);
+    }
+    td.dim {
+      text-align: right;
+      color: var(--dim);
+      font-variant-numeric: tabular-nums;
+    }
     td.name {
-      max-width: 180px; overflow: hidden; text-overflow: ellipsis;
-      cursor: pointer; white-space: nowrap;
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer;
     }
     td.name.expanded { white-space: normal; overflow: visible; text-overflow: unset; max-width: none; }
-    tbody tr:hover td { background: #f9f9f9; }
+    td.cat {
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+    tbody tr:hover td { background: var(--hover-bg); }
     tbody tr.hidden { display: none; }
-    td a { color: #111; text-decoration: underline; font-size: 0.8rem; }
 
-    /* Responsive: hide dim columns on narrow screens */
+    /* ── Responsive ──────────────────────── */
     @media (max-width: 600px) {
+      header { padding: 0 12px; }
+      .tab-bar { padding: 0 12px; }
       td.dim-hide, th.dim-hide { display: none; }
-      td.name { max-width: 120px; }
-      body { padding: 12px; }
+      td.name { max-width: 130px; }
     }
   </style>
 </head>
 <body>
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-    <h1>服カタログ</h1>
-    <a href="coordinate.html" style="font-size:0.875rem;color:#111;text-decoration:underline;">コーデを見る →</a>
-  </div>
 
-  <div class="filters" id="filters"></div>
+  <header>
+    <div class="header-brand">
+      <div class="sigil">
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <h1>Wardrobe</h1>
+    </div>
+    <nav class="header-nav">
+      <a href="coordinate.html">コーデ →</a>
+    </nav>
+  </header>
 
-  <div class="table-section">
+  <div class="tab-bar" id="tab-bar"></div>
+
+  <div class="table-wrap">
     <table id="table">
       <thead>
         <tr id="thead-row">
-          <th data-col="no" class="no-col">No<span class="sort-icon">↕</span></th>
-          <th data-col="category">カテゴリ<span class="sort-icon">↕</span></th>
-          <th data-col="name">名称<span class="sort-icon">↕</span></th>
-          <th data-col="color">カラー<span class="sort-icon">↕</span></th>
-          <th data-col="size">サイズ<span class="sort-icon">↕</span></th>
+          <th data-col="category">Cat<span class="sort-icon">↕</span></th>
+          <th data-col="brand">Brand<span class="sort-icon">↕</span></th>
+          <th data-col="name">Item<span class="sort-icon">↕</span></th>
+          <th data-col="color">Color<span class="sort-icon">↕</span></th>
           <th data-col="着丈" class="dim-hide">着丈<span class="sort-icon">↕</span></th>
           <th data-col="肩幅" class="dim-hide">肩幅<span class="sort-icon">↕</span></th>
           <th data-col="身幅" class="dim-hide">身幅<span class="sort-icon">↕</span></th>
@@ -77,45 +206,42 @@
   </div>
 
   <script>
-    const FILTER_CATS = ['すべて', 'トップス', 'ボトムス'];
+    const CATS = ['ALL', 'トップス', 'ボトムス', 'アウター', 'その他'];
     const DIM_KEYS = ['着丈', '肩幅', '身幅', '袖丈'];
 
     function dimVal(item, key) {
       const v = (item.dimensions || {})[key];
       return v != null ? v : null;
     }
-
-    function escHtml(str) {
+    function esc(str) {
       return String(str || '')
         .replace(/&/g, '&amp;').replace(/</g, '&lt;')
         .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
     let allItems = [];
-    let filterCat = 'すべて';
+    let filterCat = 'ALL';
     let sortCol = null;
-    let sortDir = 1; // 1=asc, -1=desc
+    let sortDir = 1;
 
     function sortValue(item, col, idx) {
-      if (col === 'no') return idx;
       if (col === 'category') return item.category || '';
-      if (col === 'name') return item.name || '';
-      if (col === 'color') return item.color || '';
-      if (col === 'size') return item.size || '';
+      if (col === 'brand')    return item.brand    || '';
+      if (col === 'name')     return item.name     || '';
+      if (col === 'color')    return item.color    || '';
       if (DIM_KEYS.includes(col)) return (item.dimensions || {})[col] ?? -Infinity;
       return '';
     }
 
-    function getVisibleItems() {
-      return allItems
-        .map((item, idx) => ({ item, idx }))
-        .filter(({ item }) => filterCat === 'すべて' || item.category === filterCat);
+    function getVisible() {
+      return allItems.map((item, idx) => ({ item, idx }))
+        .filter(({ item }) => filterCat === 'ALL' || item.category === filterCat);
     }
 
-    function getSortedItems() {
-      const visible = getVisibleItems();
-      if (!sortCol) return visible;
-      return [...visible].sort((a, b) => {
+    function getSorted() {
+      const v = getVisible();
+      if (!sortCol) return v;
+      return [...v].sort((a, b) => {
         const va = sortValue(a.item, sortCol, a.idx);
         const vb = sortValue(b.item, sortCol, b.idx);
         if (va < vb) return -sortDir;
@@ -127,18 +253,16 @@
     function renderRows() {
       const tbody = document.getElementById('tbody');
       tbody.innerHTML = '';
-      getSortedItems().forEach(({ item, idx }, i) => {
+      getSorted().forEach(({ item }) => {
         const tr = document.createElement('tr');
-        tr.dataset.id = item.id;
         tr.innerHTML = `
-          <td class="no">${idx + 1}</td>
-          <td>${escHtml(item.category)}</td>
-          <td class="name" title="${escHtml(item.name)}">${escHtml(item.name)}</td>
-          <td>${escHtml(item.color)}</td>
-          <td>${escHtml(item.size)}</td>
+          <td class="cat">${esc(item.category)}</td>
+          <td>${esc(item.brand)}</td>
+          <td class="name" title="${esc(item.name)}">${esc(item.name)}</td>
+          <td>${esc(item.color)}</td>
           ${DIM_KEYS.map(k => {
             const v = dimVal(item, k);
-            return `<td class="dim dim-hide">${v != null ? v : '-'}</td>`;
+            return `<td class="dim dim-hide">${v != null ? v : '—'}</td>`;
           }).join('')}
         `;
         tr.querySelector('td.name').addEventListener('click', e => {
@@ -160,26 +284,26 @@
       });
     }
 
-    function render(items) {
-      allItems = items;
-
-      // Filter buttons (fixed list)
-      const filtersEl = document.getElementById('filters');
-      filtersEl.innerHTML = '';
-      FILTER_CATS.forEach(cat => {
+    function renderTabs() {
+      const bar = document.getElementById('tab-bar');
+      bar.innerHTML = '';
+      CATS.forEach(cat => {
         const btn = document.createElement('button');
         btn.textContent = cat;
         if (cat === filterCat) btn.classList.add('active');
         btn.addEventListener('click', () => {
           filterCat = cat;
-          document.querySelectorAll('#filters button').forEach(b =>
+          document.querySelectorAll('#tab-bar button').forEach(b =>
             b.classList.toggle('active', b.textContent === filterCat));
           renderRows();
         });
-        filtersEl.appendChild(btn);
+        bar.appendChild(btn);
       });
+    }
 
-      // Sort header clicks
+    function init(items) {
+      allItems = items;
+      renderTabs();
       document.querySelectorAll('#thead-row th[data-col]').forEach(th => {
         th.addEventListener('click', () => {
           if (sortCol === th.dataset.col) {
@@ -192,16 +316,15 @@
           renderRows();
         });
       });
-
       renderRows();
     }
 
     fetch('clothes.json')
       .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
-      .then(items => render(items))
+      .then(init)
       .catch(err => {
         document.body.insertAdjacentHTML('beforeend',
-          `<p style="color:red;margin-top:16px">clothes.json の読み込みに失敗しました (${err.message})</p>`);
+          `<p style="color:#c44;padding:20px">clothes.json の読み込みに失敗しました (${err.message})</p>`);
       });
   </script>
 </body>
