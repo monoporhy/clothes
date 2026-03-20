@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>コーデの提案</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #fff; color: #111; padding: 16px; max-width: 1100px; margin: 0 auto; }
+
+    header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+    h1 { font-size: 1.4rem; font-weight: 600; }
+    header a { font-size: 0.875rem; color: #111; text-decoration: underline; }
+
+    .cards { display: flex; gap: 16px; margin-bottom: 24px; }
+    .card {
+      flex: 1; border: 1px solid #eee; border-radius: 8px; overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .card-img {
+      width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block;
+      background: #f0f0f0;
+    }
+    .card-img-placeholder {
+      width: 100%; aspect-ratio: 1 / 1; background: #f0f0f0;
+      display: flex; align-items: center; justify-content: center;
+      color: #bbb; font-size: 0.8rem;
+    }
+    .card-body { padding: 12px; flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .badge {
+      display: inline-block; font-size: 0.7rem; padding: 2px 8px;
+      border: 1px solid #ccc; border-radius: 10px; color: #555; width: fit-content;
+    }
+    .card-brand { font-size: 0.8rem; color: #555; margin-top: 4px; }
+    .card-name { font-size: 0.95rem; font-weight: 600; line-height: 1.3; }
+    .card-color { font-size: 0.8rem; color: #777; }
+
+    .empty {
+      flex: 1; border: 1px dashed #ccc; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: #bbb; font-size: 0.85rem; min-height: 200px;
+    }
+
+    .actions { display: flex; justify-content: center; }
+    .btn-shuffle {
+      padding: 10px 24px; background: #111; color: #fff; border: none;
+      border-radius: 6px; font-size: 1rem; font-family: inherit;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .btn-shuffle:hover { background: #333; }
+
+    #error { color: red; margin-top: 16px; font-size: 0.875rem; }
+
+    @media (max-width: 600px) {
+      .cards { flex-direction: column; }
+      .card-img, .card-img-placeholder { aspect-ratio: 4 / 3; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>コーデの提案</h1>
+    <a href="index.html">カタログへ</a>
+  </header>
+
+  <div class="cards" id="cards"></div>
+  <div class="actions">
+    <button class="btn-shuffle" id="btn-shuffle">別のコーデを提案 🔀</button>
+  </div>
+  <p id="error"></p>
+
+  <script>
+    let allItems = [];
+
+    function escHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function pickRandom(arr) {
+      return arr.length ? arr[Math.floor(Math.random() * arr.length)] : null;
+    }
+
+    function byCategory(items, cat) {
+      return items.filter(i => i.category === cat);
+    }
+
+    function generateCoord(items) {
+      return {
+        top:    pickRandom(byCategory(items, 'トップス')),
+        bottom: pickRandom(byCategory(items, 'ボトムス')),
+        outer:  pickRandom(byCategory(items, 'アウター')),
+      };
+    }
+
+    function renderCard(item, label) {
+      if (!item) {
+        return `<div class="empty">${escHtml(label)}なし</div>`;
+      }
+      const imgHtml = item.image
+        ? `<img class="card-img" src="${escHtml(item.image)}" alt="${escHtml(item.name)}" loading="lazy">`
+        : `<div class="card-img-placeholder">画像なし</div>`;
+      const colorHtml = item.color
+        ? `<div class="card-color">${escHtml(item.color)}</div>`
+        : '';
+      const nameHtml = item.url
+        ? `<a href="${escHtml(item.url)}" target="_blank" rel="noopener" class="card-name" style="color:#111;text-decoration:none">${escHtml(item.name)}</a>`
+        : `<div class="card-name">${escHtml(item.name)}</div>`;
+      return `
+        <div class="card">
+          ${imgHtml}
+          <div class="card-body">
+            <span class="badge">${escHtml(item.category)}</span>
+            <div class="card-brand">${escHtml(item.brand)}</div>
+            ${nameHtml}
+            ${colorHtml}
+          </div>
+        </div>`;
+    }
+
+    function shuffle() {
+      const coord = generateCoord(allItems);
+      document.getElementById('cards').innerHTML =
+        renderCard(coord.top,    'トップス') +
+        renderCard(coord.bottom, 'ボトムス') +
+        renderCard(coord.outer,  'アウター');
+    }
+
+    document.getElementById('btn-shuffle').addEventListener('click', shuffle);
+
+    fetch('clothes.json')
+      .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(items => { allItems = items; shuffle(); })
+      .catch(err => {
+        document.getElementById('error').textContent =
+          `clothes.json の読み込みに失敗しました (${err.message})`;
+      });
+  </script>
+</body>
+</html>
