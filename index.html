@@ -6,19 +6,11 @@
   <title>服カタログ</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, -apple-system, sans-serif; background: #fff; color: #111; padding: 24px; max-width: 1300px; margin: 0 auto; }
-    h1 { font-size: 1.4rem; margin-bottom: 20px; font-weight: 600; }
-
-    /* Filter area */
-    .filter-area { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; margin-bottom: 16px; }
-    .filter-selects { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-    .filter-selects select {
-      padding: 6px 10px; border: 1px solid #ccc; background: #fff;
-      border-radius: 4px; cursor: pointer; font-size: 0.875rem; font-family: inherit;
-    }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #fff; color: #111; padding: 16px; max-width: 1100px; margin: 0 auto; }
+    h1 { font-size: 1.4rem; margin-bottom: 16px; font-weight: 600; }
 
     /* Filter buttons */
-    .filters { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
     .filters button {
       padding: 6px 14px; border: 1px solid #ccc; background: #fff;
       border-radius: 4px; cursor: pointer; font-size: 0.875rem; font-family: inherit;
@@ -28,42 +20,54 @@
     .filters button:hover:not(.active) { background: #f5f5f5; }
 
     /* Table */
-    .table-section { margin-bottom: 48px; overflow-x: auto; }
+    .table-section { margin-bottom: 48px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
     table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
-    th { text-align: left; padding: 8px 12px; border-bottom: 2px solid #111; white-space: nowrap; font-weight: 600; }
-    td { padding: 8px 12px; border-bottom: 1px solid #eee; white-space: nowrap; }
+    th {
+      text-align: left; padding: 8px 10px; border-bottom: 2px solid #111;
+      white-space: nowrap; font-weight: 600; cursor: pointer; user-select: none;
+    }
+    th:hover { background: #f5f5f5; }
+    th .sort-icon { display: inline-block; margin-left: 4px; opacity: 0.3; font-size: 0.75rem; }
+    th.sort-asc .sort-icon, th.sort-desc .sort-icon { opacity: 1; }
+    td { padding: 8px 10px; border-bottom: 1px solid #eee; white-space: nowrap; }
     td.dim { text-align: right; color: #555; }
+    td.no { color: #999; font-size: 0.8rem; text-align: right; width: 2rem; }
+    td.name {
+      max-width: 180px; overflow: hidden; text-overflow: ellipsis;
+      cursor: pointer; white-space: nowrap;
+    }
+    td.name.expanded { white-space: normal; overflow: visible; text-overflow: unset; max-width: none; }
     tbody tr:hover td { background: #f9f9f9; }
     tbody tr.hidden { display: none; }
     td a { color: #111; text-decoration: underline; font-size: 0.8rem; }
 
+    /* Responsive: hide dim columns on narrow screens */
+    @media (max-width: 600px) {
+      td.dim-hide, th.dim-hide { display: none; }
+      td.name { max-width: 120px; }
+      body { padding: 12px; }
+    }
   </style>
 </head>
 <body>
   <h1>服カタログ</h1>
 
-  <div class="filter-area">
-    <div class="filters" id="filters"></div>
-    <div class="filter-selects">
-      <select id="filter-color"><option value="">カラー: すべて</option></select>
-      <select id="filter-size"><option value="">サイズ: すべて</option></select>
-    </div>
-  </div>
+  <div class="filters" id="filters"></div>
 
   <div class="table-section">
-    <table>
+    <table id="table">
       <thead>
-        <tr>
-          <th>カテゴリ</th>
-          <th>ブランド</th>
-          <th>名称</th>
-          <th>カラー</th>
-          <th>サイズ</th>
-          <th>着丈</th>
-          <th>肩幅</th>
-          <th>身幅</th>
-          <th>袖丈</th>
-          <th>URL</th>
+        <tr id="thead-row">
+          <th data-col="no" class="no-col">No<span class="sort-icon">↕</span></th>
+          <th data-col="category">カテゴリ<span class="sort-icon">↕</span></th>
+          <th data-col="name">名称<span class="sort-icon">↕</span></th>
+          <th data-col="color">カラー<span class="sort-icon">↕</span></th>
+          <th data-col="size">サイズ<span class="sort-icon">↕</span></th>
+          <th data-col="着丈" class="dim-hide">着丈<span class="sort-icon">↕</span></th>
+          <th data-col="肩幅" class="dim-hide">肩幅<span class="sort-icon">↕</span></th>
+          <th data-col="身幅" class="dim-hide">身幅<span class="sort-icon">↕</span></th>
+          <th data-col="袖丈" class="dim-hide">袖丈<span class="sort-icon">↕</span></th>
+          <th data-col="url">URL</th>
         </tr>
       </thead>
       <tbody id="tbody"></tbody>
@@ -71,99 +75,128 @@
   </div>
 
   <script>
-    const TOP_DIM_KEYS = ['着丈', '肩幅', '身幅', '袖丈'];
+    const FILTER_CATS = ['すべて', 'トップス', 'ボトムス'];
+    const DIM_KEYS = ['着丈', '肩幅', '身幅', '袖丈'];
 
-    function dimCell(item, key) {
+    function dimVal(item, key) {
       const v = (item.dimensions || {})[key];
-      return v != null ? v : '-';
+      return v != null ? v : null;
     }
 
     function escHtml(str) {
       return String(str || '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
+    let allItems = [];
     let filterCat = 'すべて';
-    let filterColor = '';
-    let filterSize = '';
+    let sortCol = null;
+    let sortDir = 1; // 1=asc, -1=desc
 
-    function applyFilter() {
-      document.querySelectorAll('#filters button').forEach(b => {
-        b.classList.toggle('active', b.textContent === filterCat);
-      });
-      document.querySelectorAll('#tbody tr[data-id]').forEach(tr => {
-        const catOk = filterCat === 'すべて' || tr.dataset.cat === filterCat;
-        const colorOk = !filterColor || tr.dataset.color === filterColor;
-        const sizeOk = !filterSize || tr.dataset.size === filterSize;
-        tr.classList.toggle('hidden', !(catOk && colorOk && sizeOk));
+    function sortValue(item, col, idx) {
+      if (col === 'no') return idx;
+      if (col === 'category') return item.category || '';
+      if (col === 'name') return item.name || '';
+      if (col === 'color') return item.color || '';
+      if (col === 'size') return item.size || '';
+      if (DIM_KEYS.includes(col)) return (item.dimensions || {})[col] ?? -Infinity;
+      return '';
+    }
+
+    function getVisibleItems() {
+      return allItems
+        .map((item, idx) => ({ item, idx }))
+        .filter(({ item }) => filterCat === 'すべて' || item.category === filterCat);
+    }
+
+    function getSortedItems() {
+      const visible = getVisibleItems();
+      if (!sortCol) return visible;
+      return [...visible].sort((a, b) => {
+        const va = sortValue(a.item, sortCol, a.idx);
+        const vb = sortValue(b.item, sortCol, b.idx);
+        if (va < vb) return -sortDir;
+        if (va > vb) return sortDir;
+        return 0;
       });
     }
 
-    function render(items) {
-      // Category filter buttons
-      const categories = ['すべて', ...new Set(items.map(i => i.category))];
-      const filtersEl = document.getElementById('filters');
-      filtersEl.innerHTML = '';
-      categories.forEach(cat => {
-        const btn = document.createElement('button');
-        btn.textContent = cat;
-        if (cat === filterCat) btn.classList.add('active');
-        btn.addEventListener('click', () => { filterCat = cat; applyFilter(); });
-        filtersEl.appendChild(btn);
-      });
-
-      // Color select
-      const colors = ['', ...new Set(items.map(i => i.color).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'ja'));
-      const colorSel = document.getElementById('filter-color');
-      colorSel.innerHTML = '<option value="">カラー: すべて</option>';
-      colors.filter(c => c).forEach(c => {
-        const opt = document.createElement('option');
-        opt.value = c; opt.textContent = c;
-        if (c === filterColor) opt.selected = true;
-        colorSel.appendChild(opt);
-      });
-      colorSel.onchange = () => { filterColor = colorSel.value; applyFilter(); };
-
-      // Size select
-      const sizes = [...new Set(items.map(i => i.size).filter(Boolean))].sort();
-      const sizeSel = document.getElementById('filter-size');
-      sizeSel.innerHTML = '<option value="">サイズ: すべて</option>';
-      sizes.forEach(s => {
-        const opt = document.createElement('option');
-        opt.value = s; opt.textContent = s;
-        if (s === filterSize) opt.selected = true;
-        sizeSel.appendChild(opt);
-      });
-      sizeSel.onchange = () => { filterSize = sizeSel.value; applyFilter(); };
-
-      // Table rows
+    function renderRows() {
       const tbody = document.getElementById('tbody');
       tbody.innerHTML = '';
-      items.forEach(item => {
+      getSortedItems().forEach(({ item, idx }, i) => {
         const tr = document.createElement('tr');
         tr.dataset.id = item.id;
-        tr.dataset.cat = item.category;
-        tr.dataset.color = item.color || '';
-        tr.dataset.size = item.size || '';
         const urlCell = item.url
           ? `<a href="${escHtml(item.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">開く</a>`
           : '';
         tr.innerHTML = `
+          <td class="no">${idx + 1}</td>
           <td>${escHtml(item.category)}</td>
-          <td>${escHtml(item.brand)}</td>
-          <td>${escHtml(item.name)}</td>
+          <td class="name" title="${escHtml(item.name)}">${escHtml(item.name)}</td>
           <td>${escHtml(item.color)}</td>
           <td>${escHtml(item.size)}</td>
-          ${TOP_DIM_KEYS.map(k => `<td class="dim">${escHtml(dimCell(item, k))}</td>`).join('')}
+          ${DIM_KEYS.map(k => {
+            const v = dimVal(item, k);
+            return `<td class="dim dim-hide">${v != null ? v : '-'}</td>`;
+          }).join('')}
           <td>${urlCell}</td>
         `;
+        tr.querySelector('td.name').addEventListener('click', e => {
+          e.currentTarget.classList.toggle('expanded');
+        });
         tbody.appendChild(tr);
       });
+    }
 
-      applyFilter();
+    function updateSortHeaders() {
+      document.querySelectorAll('#thead-row th').forEach(th => {
+        th.classList.remove('sort-asc', 'sort-desc');
+        const icon = th.querySelector('.sort-icon');
+        if (icon) icon.textContent = '↕';
+        if (th.dataset.col === sortCol) {
+          th.classList.add(sortDir === 1 ? 'sort-asc' : 'sort-desc');
+          if (icon) icon.textContent = sortDir === 1 ? '↑' : '↓';
+        }
+      });
+    }
+
+    function render(items) {
+      allItems = items;
+
+      // Filter buttons (fixed list)
+      const filtersEl = document.getElementById('filters');
+      filtersEl.innerHTML = '';
+      FILTER_CATS.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.textContent = cat;
+        if (cat === filterCat) btn.classList.add('active');
+        btn.addEventListener('click', () => {
+          filterCat = cat;
+          document.querySelectorAll('#filters button').forEach(b =>
+            b.classList.toggle('active', b.textContent === filterCat));
+          renderRows();
+        });
+        filtersEl.appendChild(btn);
+      });
+
+      // Sort header clicks
+      document.querySelectorAll('#thead-row th[data-col]').forEach(th => {
+        if (th.dataset.col === 'url') return;
+        th.addEventListener('click', () => {
+          if (sortCol === th.dataset.col) {
+            sortDir *= -1;
+          } else {
+            sortCol = th.dataset.col;
+            sortDir = 1;
+          }
+          updateSortHeaders();
+          renderRows();
+        });
+      });
+
+      renderRows();
     }
 
     fetch('clothes.json')
