@@ -11,11 +11,11 @@ Personal clothes catalog published at https://monoporhy.github.io/clothes/. Used
 2-step flow:
 
 1. **URL を受け取ったら** — URL をフェッチして brand, name, **og:image**, category を抽出し、ユーザーに確認する
-   - og:image が取得できた場合: `image` フィールドに URL を記録する
+   - og:image が取得できた場合: 画像を `images/{id}.jpg` としてダウンロードし、`image` フィールドに `images/{id}.jpg` を記録する
    - og:image が取得できない場合: `image: ""` のまま（後で手動追加）
 2. **サイズ（とカラー）を受け取ったら** — サイズページまたは商品ページから 着丈/肩幅/身幅/袖丈 を抽出して表示する
    - 取得できない場合: スクリーンショットを共有してもらい、数値を手動で転記する
-3. `clothes.json` に追記して `git add clothes.json && git commit -m "feat: add [item description]" && git push`
+3. `clothes.json` と `images/{id}.jpg` を両方コミットして push: `git add clothes.json images/ && git commit -m "feat: add [item description]" && git push`
 
 ## Data Schema (`clothes.json`)
 
@@ -29,7 +29,7 @@ Personal clothes catalog published at https://monoporhy.github.io/clothes/. Used
   "size": "サイズ",
   "dimensions": { "着丈": 69, "肩幅": 44, "身幅": 52, "袖丈": 20 },
   "url": "https://...",
-  "image": "https://...（og:image URL）",
+  "image": "images/{id}.jpg",              // ローカル保存パス（取得できない場合は ""）
   "purchased_at": "yyyy-mm"
 }
 ```

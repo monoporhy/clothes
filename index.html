@@ -70,7 +70,6 @@
           <th data-col="肩幅" class="dim-hide">肩幅<span class="sort-icon">↕</span></th>
           <th data-col="身幅" class="dim-hide">身幅<span class="sort-icon">↕</span></th>
           <th data-col="袖丈" class="dim-hide">袖丈<span class="sort-icon">↕</span></th>
-          <th data-col="url">URL</th>
         </tr>
       </thead>
       <tbody id="tbody"></tbody>
@@ -131,9 +130,6 @@
       getSortedItems().forEach(({ item, idx }, i) => {
         const tr = document.createElement('tr');
         tr.dataset.id = item.id;
-        const urlCell = item.url
-          ? `<a href="${escHtml(item.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">開く</a>`
-          : '';
         tr.innerHTML = `
           <td class="no">${idx + 1}</td>
           <td>${escHtml(item.category)}</td>
@@ -144,7 +140,6 @@
             const v = dimVal(item, k);
             return `<td class="dim dim-hide">${v != null ? v : '-'}</td>`;
           }).join('')}
-          <td>${urlCell}</td>
         `;
         tr.querySelector('td.name').addEventListener('click', e => {
           e.currentTarget.classList.toggle('expanded');
@@ -186,7 +181,6 @@
 
       // Sort header clicks
       document.querySelectorAll('#thead-row th[data-col]').forEach(th => {
-        if (th.dataset.col === 'url') return;
         th.addEventListener('click', () => {
           if (sortCol === th.dataset.col) {
             sortDir *= -1;
