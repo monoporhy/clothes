@@ -5,6 +5,7 @@
     "brand": "ユニクロ",
     "name": "ドライEXクルーネックT",
     "color": "ホワイト",
+    "color_hex": "#F0F0F0",
     "size": "M",
     "dimensions": {
       "着丈": 69,
@@ -22,6 +23,7 @@
     "brand": "LIDNM",
     "name": "MERINO WOOL BOX TEE",
     "color": "",
+    "color_hex": "",
     "size": "",
     "dimensions": {
       "着丈": 62,
@@ -39,6 +41,7 @@
     "brand": "LIDNM",
     "name": "Felted Wool Utility Overall",
     "color": "Coal Black",
+    "color_hex": "#1C1C1C",
     "size": "",
     "dimensions": {
       "肩幅": 48,
@@ -54,6 +57,7 @@
     "brand": "LIDNM",
     "name": "ALPACA KNIT SHIRT CARDIGAN",
     "color": "HEATHER BLACK",
+    "color_hex": "#2D2D2D",
     "size": "",
     "dimensions": {
       "着丈": 61,
@@ -71,6 +75,7 @@
     "brand": "LIDNM",
     "name": "Cashmere Fur Cardigan",
     "color": "Fogstone",
+    "color_hex": "#9BA4A4",
     "size": "",
     "dimensions": {
       "着丈": 61,
@@ -88,6 +93,7 @@
     "brand": "LIDNM",
     "name": "DOUBLE BREASTED CHESTER",
     "color": "DARK GRAY",
+    "color_hex": "#4A4A4A",
     "size": "",
     "dimensions": {
       "着丈": 121,
@@ -105,6 +111,7 @@
     "brand": "LIDNM",
     "name": "STRECCAN REVER COAT",
     "color": "HEATHER BLACK",
+    "color_hex": "#2D2D2D",
     "size": "",
     "dimensions": {
       "着丈": 123,
@@ -121,6 +128,7 @@
     "brand": "LIDNM",
     "name": "Beaver Double-faced Trench",
     "color": "MIDNIGHT",
+    "color_hex": "#1A1F3C",
     "size": "",
     "dimensions": {
       "着丈": 123,
@@ -138,6 +146,7 @@
     "brand": "Llife",
     "name": "Llife DOESKIN TAILORED JACKET",
     "color": "",
+    "color_hex": "",
     "size": "",
     "dimensions": {
       "着丈": 73,
@@ -155,6 +164,7 @@
     "brand": "LIDNM",
     "name": "LINEN SLUB TANK TOP",
     "color": "",
+    "color_hex": "",
     "size": "",
     "dimensions": {
       "着丈": 70.5,
@@ -171,6 +181,7 @@
     "brand": "LIDNM",
     "name": "Fox Cashmere V Knit",
     "color": "",
+    "color_hex": "",
     "size": "",
     "dimensions": {
       "着丈": 63,
@@ -188,6 +199,7 @@
     "brand": "LIDNM",
     "name": "WOOL CASHMERE ZIP HOODIE",
     "color": "",
+    "color_hex": "",
     "size": "",
     "dimensions": {
       "着丈": 61,
@@ -204,6 +216,7 @@
     "brand": "LIDNM",
     "name": "CROCHET BLADE WOOL PNT",
     "color": "COAL BLACK",
+    "color_hex": "#1C1C1C",
     "size": "",
     "dimensions": {},
     "url": "https://lidnm-store.com/products/detail.php?product_id=447",
@@ -216,6 +229,7 @@
     "brand": "LIDNM",
     "name": "CRACK WASHED BAGGY DENIM PANTS",
     "color": "FADE BLACK",
+    "color_hex": "#383838",
     "size": "",
     "dimensions": {},
     "url": "https://lidnm-store.com/products/detail.php?product_id=443",
@@ -228,6 +242,7 @@
     "brand": "LIDNM",
     "name": "CRACK WASHED BAGGY DENIM PANTS",
     "color": "FADE BLACK",
+    "color_hex": "#383838",
     "size": "",
     "dimensions": {},
     "url": "https://lidnm-store.com/products/detail.php?product_id=468",
@@ -240,6 +255,7 @@
     "brand": "Llife",
     "name": "Llife DOESKIN SLACKS",
     "color": "",
+    "color_hex": "",
     "size": "",
     "dimensions": {},
     "url": "https://en.lidnm-store.com/products/detail.php?product_id=460",
@@ -252,6 +268,7 @@
     "brand": "LIDNM",
     "name": "Wool Linen Baggy Slacks",
     "color": "DRIFTWOOD",
+    "color_hex": "#8B7355",
     "size": "",
     "dimensions": {},
     "url": "https://lidnm-store.com/products/detail.php?product_id=356",
@@ -264,6 +281,7 @@
     "brand": "LIDNM",
     "name": "MILLED NZ MERINO WOOL L/S",
     "color": "",
+    "color_hex": "",
     "size": "",
     "dimensions": {
       "着丈": 67,
@@ -281,6 +299,7 @@
     "brand": "LIDNM",
     "name": "MILLED NZ MERINO WOOL L/S",
     "color": "",
+    "color_hex": "",
     "size": "",
     "dimensions": {
       "着丈": 67,
@@ -298,6 +317,7 @@
     "brand": "LIDNM",
     "name": "Vis/Li Random Rib Henry Knit",
     "color": "Sable",
+    "color_hex": "#483C32",
     "size": "",
     "dimensions": {
       "着丈": 60,
@@ -315,6 +335,7 @@
     "brand": "LIDNM",
     "name": "Goat Suede Sports JKT",
     "color": "MIDNIGHT",
+    "color_hex": "#1A1F3C",
     "size": "",
     "dimensions": {
       "着丈": 61,

@@ -26,6 +26,7 @@ Personal clothes catalog published at https://monoporhy.github.io/clothes/. Used
   "brand": "ブランド名",
   "name": "商品名",
   "color": "カラー",
+  "color_hex": "#9BA4A4",              // 近似HEX（設定しない場合は ""）
   "size": "サイズ",
   "dimensions": { "着丈": 69, "肩幅": 44, "身幅": 52, "袖丈": 20 },
   "url": "https://...",
