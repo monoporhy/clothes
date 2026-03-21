@@ -544,5 +544,57 @@
     "url": "https://zozo.jp/shop/mono-mart/goods/101140873/",
     "image": "",
     "purchased_at": "2026-03"
+  },
+  {
+    "id": "lidnm-sil-v-neck-knit-slate-gray-2026-03",
+    "category": "トップス",
+    "brand": "LIDNM",
+    "name": "Si/L V-Neck Knit",
+    "color": "SLATE GRAY",
+    "color_hex": "#708090",
+    "size": "S",
+    "dimensions": { "着丈": 59, "身幅": 53, "裄丈": 79 },
+    "url": "https://lidnm-store.com/products/detail569.html?c=6",
+    "image": "",
+    "purchased_at": "2026-03"
+  },
+  {
+    "id": "lidnm-wool-jersey-henley-ls-tee-heather-gray-2026-03",
+    "category": "トップス",
+    "brand": "LIDNM",
+    "name": "Wool Jersey Henley L/S Tee",
+    "color": "HEATHER GRAY",
+    "color_hex": "#888888",
+    "size": "S",
+    "dimensions": { "着丈": 61, "肩幅": 41.5, "身幅": 55, "袖丈": 59 },
+    "url": "https://lidnm-store.com/products/detail568.html?c=5",
+    "image": "",
+    "purchased_at": "2026-03"
+  },
+  {
+    "id": "lidnm-wool-subtle-flare-slacks-carbon-2026-03",
+    "category": "ボトムス",
+    "brand": "LIDNM",
+    "name": "Wool Subtle Flare Slacks",
+    "color": "CARBON",
+    "color_hex": "#3D3D3D",
+    "size": "S",
+    "dimensions": { "ウエスト": 76, "股上": 28, "渡り": 34 },
+    "url": "https://lidnm-store.com/products/detail567.html?c=7",
+    "image": "",
+    "purchased_at": "2026-03"
+  },
+  {
+    "id": "lidnm-wool-cropped-sport-jkt-carbon-2026-03",
+    "category": "アウター",
+    "brand": "LIDNM",
+    "name": "Wool Cropped Sport Jacket",
+    "color": "CARBON",
+    "color_hex": "#3D3D3D",
+    "size": "S",
+    "dimensions": { "着丈": 59, "肩幅": 50, "身幅": 57.5, "袖丈": 57 },
+    "url": "https://lidnm-store.com/products/detail566.html?c=7",
+    "image": "",
+    "purchased_at": "2026-03"
   }
 ]
