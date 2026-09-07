@@ -1,6 +1,8 @@
 import pathlib
 import sys
+import tempfile
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent / 'scripts'))
 import wishlist_add
@@ -62,6 +64,17 @@ class TestBuildItem(unittest.TestCase):
         item = wishlist_add.build_item('X', '', '', '2026-09-07')
         self.assertEqual(item['image'], '')
         self.assertEqual(item['status'], 'inbox')
+
+
+class TestMainCorruptWishlist(unittest.TestCase):
+    def test_corrupt_json_aborts_without_overwriting(self):
+        with tempfile.TemporaryDirectory() as d:
+            tmp_path = pathlib.Path(d) / 'wishlist.json'
+            tmp_path.write_text('{broken')
+            with patch.object(wishlist_add, 'WISHLIST_PATH', tmp_path):
+                result = wishlist_add.main(['wishlist_add.py', 'https://www.instagram.com/p/Xabc/'])
+            self.assertEqual(result, 1)
+            self.assertEqual(tmp_path.read_text(), '{broken')
 
 
 if __name__ == '__main__':

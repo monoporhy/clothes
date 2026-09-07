@@ -83,7 +83,14 @@ def main(argv):
     if not shortcode:
         print(f'not an instagram post url, skipping: {argv[1]}')
         return 0
-    items = json.loads(WISHLIST_PATH.read_text()) if WISHLIST_PATH.exists() else []
+    if WISHLIST_PATH.exists():
+        try:
+            items = json.loads(WISHLIST_PATH.read_text())
+        except json.JSONDecodeError as e:
+            print(f'wishlist.json is corrupt, aborting: {e}')
+            return 1
+    else:
+        items = []
     item_id = f'ig-{shortcode}'
     if has_id(items, item_id):
         print(f'already exists: {item_id}')
