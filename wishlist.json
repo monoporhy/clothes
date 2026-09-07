@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "id": "ig-DAbc123TEST",
+    "ig_url": "https://www.instagram.com/p/DAbc123TEST/",
+    "image": "",
+    "caption": "",
+    "brand": "",
+    "category": "",
+    "score": null,
+    "ai_comment": "",
+    "similar_owned": [],
+    "status": "inbox",
+    "added_at": "2026-09-07"
+  }
+]
