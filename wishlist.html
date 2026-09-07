@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ウィッシュリスト</title>
+  <style>
+    :root {
+      --bg:       #0b0c0e;
+      --surface:  #111318;
+      --border:   #252830;
+      --border2:  #1e2028;
+      --text:     #c4c8d4;
+      --muted:    #5a6070;
+      --accent:   #4d7fa8;
+      --dim:      #8a90a0;
+      --hover-bg: #161820;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Helvetica Neue', Helvetica, 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex;
+      align-items: stretch;
+    }
+    .header-brand {
+      padding: 14px 20px 14px 0;
+      border-right: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-brand .sigil {
+      width: 22px; height: 22px;
+      display: grid;
+      grid-template: 1fr 1fr / 1fr 1fr;
+      gap: 3px;
+    }
+    .header-brand .sigil span { background: var(--accent); display: block; }
+    .header-brand .sigil span:nth-child(3) { background: var(--muted); }
+    h1 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .header-nav {
+      padding: 14px 0 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+    }
+    .header-nav a {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      padding: 5px 12px;
+      border: 1px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .header-nav a:hover { color: var(--accent); border-color: var(--border); }
+
+    .control-bar {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .tab-bar { display: flex; }
+    .tab-bar button {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-family: inherit;
+      letter-spacing: 0.1em;
+      padding: 10px 16px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: color 0.15s, border-color 0.15s;
+      margin-bottom: -1px;
+    }
+    .tab-bar button:hover { color: var(--text); }
+    .tab-bar button.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .score-filter {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.7rem;
+      color: var(--muted);
+      white-space: nowrap;
+      padding-left: 16px;
+    }
+    .score-filter select {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      font-family: inherit;
+      font-size: 0.75rem;
+      padding: 4px 8px;
+    }
+
+    .section-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 20px 24px 0;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 16px;
+      padding: 16px 24px 32px;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+    .card .thumb {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      display: block;
+      background: var(--border2);
+    }
+    .card .no-image {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      background: var(--border2);
+    }
+    .card-body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .card-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+    .card-brand { font-size: 0.75rem; letter-spacing: 0.06em; }
+    .card-cat { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.08em; }
+    .score-badge {
+      font-size: 0.8rem;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .card-comment { font-size: 0.72rem; color: var(--dim); line-height: 1.5; flex: 1; }
+    .card-caption {
+      font-size: 0.68rem;
+      color: var(--muted);
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .similar {
+      border-top: 1px solid var(--border2);
+      padding-top: 8px;
+      font-size: 0.65rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .similar .similar-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+    .card-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border2);
+      padding-top: 10px;
+    }
+    .card-actions a {
+      font-size: 0.7rem;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+    }
+    .card-actions button {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.65rem;
+      font-family: inherit;
+      padding: 4px 10px;
+      cursor: pointer;
+      letter-spacing: 0.06em;
+    }
+    .card-actions button:hover { color: var(--text); border-color: var(--muted); }
+
+    .empty-note { padding: 16px 24px 32px; color: var(--muted); font-size: 0.75rem; }
+    .footer-note { padding: 0 24px 32px; font-size: 0.68rem; color: var(--muted); }
+    .footer-note a { color: var(--muted); cursor: pointer; text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      header, .control-bar { padding-left: 12px; padding-right: 12px; }
+      .section-label { padding: 16px 12px 0; }
+      .grid { padding: 12px 12px 24px; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+      .footer-note { padding: 0 12px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-brand">
+      <div class="sigil">
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <h1>Wishlist</h1>
+    </div>
+    <nav class="header-nav">
+      <a href="index.html">← カタログ</a>
+      <a href="coordinate.html">コーデ →</a>
+    </nav>
+  </header>
+
+  <div class="control-bar">
+    <div class="tab-bar" id="tab-bar"></div>
+    <label class="score-filter">
+      スコア
+      <select id="min-score">
+        <option value="0">すべて</option>
+        <option value="60">60+</option>
+        <option value="70">70+</option>
+        <option value="80">80+</option>
+      </select>
+    </label>
+  </div>
+
+  <div id="content"></div>
+
+  <div class="footer-note">
+    非表示: <span id="hidden-count">0</span>件
+    <a id="reset-hidden">リセット</a>
+  </div>
+
+  <script>
+    const CATS = ['ALL', 'トップス', 'ボトムス', 'アウター', 'シューズ', 'バッグ', 'アクセサリー', 'その他'];
+    const HIDDEN_KEY = 'wishlist-hidden';
+
+    let wishlist = [];
+    let clothesById = {};
+    let filterCat = 'ALL';
+    let minScore = 0;
+
+    function esc(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function getHidden() {
+      try { return JSON.parse(localStorage.getItem(HIDDEN_KEY)) || []; }
+      catch { return []; }
+    }
+    function hideItem(id) {
+      const h = getHidden();
+      if (!h.includes(id)) h.push(id);
+      localStorage.setItem(HIDDEN_KEY, JSON.stringify(h));
+      render();
+    }
+    function resetHidden() {
+      localStorage.removeItem(HIDDEN_KEY);
+      render();
+    }
+
+    function similarHTML(item) {
+      const owned = (item.similar_owned || [])
+        .map(id => clothesById[id])
+        .filter(Boolean);
+      if (!owned.length) return '';
+      const rows = owned.map(c => `${esc(c.brand)} / ${esc(c.name)}`).join('<br>');
+      return `<div class="similar"><div class="similar-label">似た手持ち</div>${rows}</div>`;
+    }
+
+    function cardHTML(item) {
+      const img = item.image
+        ? `<img class="thumb" src="${esc(item.image)}" alt="" loading="lazy">`
+        : `<div class="no-image">NO IMAGE</div>`;
+      const score = item.score != null ? `<span class="score-badge">${item.score}</span>` : '';
+      const brand = item.brand || '(未整理)';
+      return `
+        <div class="card" data-id="${esc(item.id)}">
+          ${img}
+          <div class="card-body">
+            <div class="card-top">
+              <div>
+                <div class="card-brand">${esc(brand)}</div>
+                <div class="card-cat">${esc(item.category || '')}</div>
+              </div>
+              ${score}
+            </div>
+            ${item.ai_comment ? `<div class="card-comment">${esc(item.ai_comment)}</div>` : ''}
+            ${!item.ai_comment && item.caption ? `<div class="card-caption">${esc(item.caption)}</div>` : ''}
+            ${similarHTML(item)}
+            <div class="card-actions">
+              <a href="${esc(item.ig_url)}" target="_blank" rel="noopener">投稿を見る ↗</a>
+              <button class="hide-btn">非表示</button>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function sectionHTML(label, items, emptyNote) {
+      if (!items.length) {
+        return emptyNote
+          ? `<div class="section-label">${label}</div><div class="empty-note">${emptyNote}</div>`
+          : '';
+      }
+      return `<div class="section-label">${label}</div>
+        <div class="grid">${items.map(cardHTML).join('')}</div>`;
+    }
+
+    function render() {
+      const hidden = getHidden();
+      const visible = wishlist.filter(i =>
+        !hidden.includes(i.id) &&
+        (filterCat === 'ALL' || i.category === filterCat));
+
+      const inbox = visible.filter(i => i.status === 'inbox');
+      const scored = visible
+        .filter(i => i.status === 'scored' && (i.score == null || i.score >= minScore))
+        .sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
+
+      const content = document.getElementById('content');
+      content.innerHTML =
+        sectionHTML('整理待ち', inbox, '') +
+        sectionHTML('厳選リスト', scored,
+          'まだありません。IGの共有シートから「欲しい服に追加」で貯めて、PCで「ウィッシュリスト整理して」と頼むとここに並びます。');
+
+      content.querySelectorAll('.hide-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+          hideItem(e.target.closest('.card').dataset.id);
+        });
+      });
+      document.getElementById('hidden-count').textContent = hidden.length;
+    }
+
+    function renderTabs() {
+      const bar = document.getElementById('tab-bar');
+      bar.innerHTML = '';
+      CATS.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.textContent = cat;
+        if (cat === filterCat) btn.classList.add('active');
+        btn.addEventListener('click', () => {
+          filterCat = cat;
+          document.querySelectorAll('#tab-bar button').forEach(b =>
+            b.classList.toggle('active', b.textContent === filterCat));
+          render();
+        });
+        bar.appendChild(btn);
+      });
+    }
+
+    document.getElementById('min-score').addEventListener('change', e => {
+      minScore = Number(e.target.value);
+      render();
+    });
+    document.getElementById('reset-hidden').addEventListener('click', resetHidden);
+
+    Promise.all([
+      fetch('wishlist.json').then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }),
+      fetch('clothes.json').then(r => r.ok ? r.json() : []).catch(() => []),
+    ])
+      .then(([wl, clothes]) => {
+        wishlist = wl;
+        clothes.forEach(c => { clothesById[c.id] = c; });
+        renderTabs();
+        render();
+      })
+      .catch(err => {
+        document.body.insertAdjacentHTML('beforeend',
+          `<p style="color:#c44;padding:20px">wishlist.json の読み込みに失敗しました (${err.message})</p>`);
+      });
+  </script>
+</body>
+</html>
