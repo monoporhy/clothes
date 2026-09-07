@@ -1,0 +1,36 @@
+name: wishlist-add
+
+on:
+  repository_dispatch:
+    types: [wishlist-add]
+
+concurrency:
+  group: wishlist
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  add:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Add post to wishlist
+        env:
+          IG_URL: ${{ github.event.client_payload.url }}
+        run: python3 scripts/wishlist_add.py "$IG_URL"
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add wishlist.json images/wishlist
+          if git diff --cached --quiet; then
+            echo "no changes"
+            exit 0
+          fi
+          git commit -m "feat: ウィッシュリストに投稿を追加"
+          git pull --rebase origin main
+          git push
