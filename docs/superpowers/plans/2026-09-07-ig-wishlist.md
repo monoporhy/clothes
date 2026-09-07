@@ -302,6 +302,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir -p images/wishlist
           git add wishlist.json images/wishlist
           if git diff --cached --quiet; then
             echo "no changes"
