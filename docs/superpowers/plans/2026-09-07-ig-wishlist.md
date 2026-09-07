@@ -674,7 +674,7 @@ git push
       const img = item.image
         ? `<img class="thumb" src="${esc(item.image)}" alt="" loading="lazy">`
         : `<div class="no-image">NO IMAGE</div>`;
-      const score = item.score != null ? `<span class="score-badge">${item.score}</span>` : '';
+      const score = item.score != null ? `<span class="score-badge">${esc(item.score)}</span>` : '';
       const brand = item.brand || '(未整理)';
       return `
         <div class="card" data-id="${esc(item.id)}">
