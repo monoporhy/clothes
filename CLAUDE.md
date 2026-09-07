@@ -49,3 +49,13 @@ Two files only:
 - `index.html` — self-contained static page; fetches `clothes.json` at runtime and renders a filterable table + image gallery with no build step or dependencies
 
 The page is deployed via GitHub Pages (no CI needed — push to `main` publishes automatically).
+
+## Wishlist (IGウィッシュリスト)
+
+Instagramで見つけた欲しい服を貯める仕組み。手持ちカタログとは別ファイル。
+
+- `wishlist.json` — ウィッシュリスト本体(スキーマは `docs/superpowers/specs/2026-09-07-ig-wishlist-design.md`)
+- `wishlist.html` — 閲覧ページ(スコア順カード表示)
+- `.github/workflows/wishlist-add.yml` — iPhoneショートカットからの `repository_dispatch` (`wishlist-add`) で `scripts/wishlist_add.py` を実行し inbox 項目を追記
+- 「**ウィッシュリスト整理して**」と言われたら `docs/wishlist-triage.md` の手順でスコアリングする
+- セットアップ手順(PAT・ショートカット作成): `docs/wishlist-setup.md`
